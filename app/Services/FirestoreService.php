@@ -17,8 +17,13 @@ class FirestoreService
                 'name' => $name,
             ];
 
-            \Log::info('Firestore: ' . $firebase);
-            // 🔒 No snapshot, just try writing to Firestore
+            \Log::info('Firestore document initialized', [
+                'collection' => 'Test',
+                'document_id' => $id,
+                'path' => $firebase->name(),
+            ]);
+
+            // Safe write
             $firebase->set($data);
 
             return response()->json([
