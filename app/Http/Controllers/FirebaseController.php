@@ -9,12 +9,9 @@ class FirebaseController extends Controller
     public function test(FirestoreService $firestore, $id, $name)
     {
         $firestore = new FirestoreService();
-        $firebase = $firestore->addTestDocument($id, $name);
+        $response = $firestore->addTestDocument($id, $name);
 
-        return response()->json([
-            'status' => 'success',
-            'path' => $firebase->name(),
-        ]);
+        return $response;
     }
 }
 

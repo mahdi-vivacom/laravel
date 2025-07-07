@@ -6,31 +6,34 @@ class FirestoreService
 {
     public function addTestDocument($id, $name)
     {
-        $data = [
-            'id' => $id,
-            'name' => $name,
-        ];
+        try {
+            $firebase = app('firebase.firestore')
+                ->database()
+                ->collection('Test')
+                ->document($id);
 
-        $firebase = app('firebase.firestore')
-            ->database()
-            ->collection('Test')
-            ->document($id);
+            $data = [
+                'id' => $id,
+                'name' => $name,
+                'timestamp' => now()->toDateTimeString()
+            ];
 
-        $documentSnapshot = $firebase->snapshot();
-
-        \Log::info('Firestore Document Path: ' . $firebase->name());
-
-        if ($documentSnapshot->exists()) {
-            \Log::info('Document exists. Updating...');
-            $firebase->set($data, ['merge' => true]);
-        } else {
-            \Log::info('Document does not exist. Creating new...');
+            // ✅ Just try a write first (no snapshot)
             $firebase->set($data);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Firestore write successful',
+                'path' => $firebase->name()
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Firestore error', ['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        \Log::info('Data sent to Firestore: ', $data);
-
-        return $firebase;
     }
 
 }
