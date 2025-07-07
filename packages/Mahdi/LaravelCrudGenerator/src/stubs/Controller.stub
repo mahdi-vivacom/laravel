@@ -1,0 +1,126 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\{{ model }};
+use App\DataTables\{{ model }}sDataTable;
+use App\Http\Requests\Store{{ model }}Request;
+use App\Http\Requests\Update{{ model }}Request;
+use App\Services\CommonService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Throwable;
+
+class {{ model }}Controller extends Controller
+{
+    protected $index = '{{ model }}';
+    protected $indexRoute = '{{ route }}';
+    protected $commonService;
+
+    public function __construct(CommonService $commonService)
+    {
+        $this->commonService = $commonService;
+    }
+
+    public function index(Request $request, {{ model }}sDataTable $dataTable)
+    {
+        if ($request->ajax()) {
+            return $this->commonService->jsonResponse({{ model }}::all(), "{$this->index} list fetched");
+        }
+
+        return $dataTable->render('common.index', [
+            'title' => "{$this->index} " . trans('admin_fields.list'),
+            'route' => $this->indexRoute,
+            'index' => $this->index,
+        ]);
+    }
+
+    public function store(Store{{ model }}Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->validated();
+
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->commonService->uploadImage($request->file('image'), '{{ route }}');
+            }
+
+            if ($request->hasFile('icon')) {
+                $data['icon'] = $this->commonService->uploadImage($request->file('icon'), '{{ route }}');
+            }
+
+            $item = {{ model }}::create($data);
+            DB::commit();
+
+            if ($request->ajax()) {
+                return $this->commonService->jsonResponse($item, "{$this->index} created", 201);
+            }
+
+            return redirect()->route($this->indexRoute . '.index')->with('success', "{$this->index} created");
+        } catch (Throwable $th) {
+            DB::rollBack();
+            return $this->commonService->jsonResponse(null, $th->getMessage(), 500);
+        }
+    }
+
+    public function show({{ model }} $item)
+    {
+        return response()->json($item);
+    }
+
+    public function edit({{ model }} $item)
+    {
+        return response()->json($item);
+    }
+
+    public function update(Update{{ model }}Request $request, {{ model }} $item)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->validated();
+
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->commonService->uploadImage($request->file('image'), '{{ route }}');
+            }
+
+            if ($request->hasFile('icon')) {
+                $data['icon'] = $this->commonService->uploadImage($request->file('icon'), '{{ route }}');
+            }
+
+            $item->update($data);
+            DB::commit();
+
+            if ($request->ajax()) {
+                return $this->commonService->jsonResponse($item, "{$this->index} updated");
+            }
+
+            return redirect()->route($this->indexRoute . '.index')->with('success', "{$this->index} updated");
+        } catch (Throwable $th) {
+            DB::rollBack();
+            return $this->commonService->jsonResponse(null, $th->getMessage(), 500);
+        }
+    }
+
+    public function destroy(Request $request, {{ model }} $item)
+    {
+        DB::beginTransaction();
+        try {
+            $item->delete();
+            DB::commit();
+
+            if ($request->ajax()) {
+                return $this->commonService->jsonResponse(null, "{$this->index} deleted");
+            }
+
+            return redirect()->route($this->indexRoute . '.index')->with('success', "{$this->index} deleted");
+        } catch (Throwable $th) {
+            DB::rollBack();
+            return $this->commonService->jsonResponse(null, $th->getMessage(), 500);
+        }
+    }
+
+    public function status(Request $request)
+    {
+        return $this->commonService->toggleStatus($request, {{ model }}::class);
+    }
+}

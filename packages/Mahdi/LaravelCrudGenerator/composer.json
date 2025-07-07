@@ -1,0 +1,22 @@
+{
+    "name": "mahdihasan/laravel-crud-generator",
+    "description": "Laravel CRUD + status generator with DataTable and CommonService",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mahdi\\LaravelCrudGenerator\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mahdi\\LaravelCrudGenerator\\CrudServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "illuminate/support": ">=8.0"
+    }
+}
