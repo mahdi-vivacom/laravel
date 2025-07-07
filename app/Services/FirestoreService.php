@@ -17,18 +17,30 @@ class FirestoreService
                 'name' => $name,
             ];
 
-            \Log::info('Firestore document initialized', [
-                'collection' => 'Test',
-                'document_id' => $id,
-                'path' => $firebase->name(),
-            ]);
+            // Safely check if document exists
+            $snapshot = $firebase->snapshot();
 
-            // Safe write
-            $firebase->set($data);
+            if ($snapshot->exists()) {
+                \Log::info('Firestore document already exists', [
+                    'document_id' => $id,
+                    'current_data' => $snapshot->data(), // 🔍 Log existing content
+                    'path' => $firebase->name(),
+                ]);
+
+                // Merge new data into existing document
+                $firebase->set($data, ['merge' => true]);
+            } else {
+                \Log::info('Firestore document does not exist. Creating new.', [
+                    'document_id' => $id,
+                    'path' => $firebase->name(),
+                ]);
+
+                $firebase->set($data);
+            }
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Document written successfully',
+                'message' => 'Document handled successfully',
                 'path' => $firebase->name()
             ]);
 
