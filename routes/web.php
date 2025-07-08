@@ -7,4 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/firebase/{id}/{name}', [FirebaseController::class, 'test']);
+Route::get('/firebase', [FirebaseController::class, 'testFirestore']);
