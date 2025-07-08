@@ -56,7 +56,7 @@ class FirebaseController extends Controller
             'message' => 'Hello from Laravel!',
             'timestamp' => now()->toDateTimeString(),
         ]);
-
+        dd($docRef);
         // Read it back
         $snapshot = $docRef->snapshot();
 
