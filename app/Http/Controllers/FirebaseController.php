@@ -11,7 +11,7 @@ class FirebaseController extends Controller
     {
         // Create the Firebase factory
         $factory = (new Factory)
-            ->withServiceAccount(storage_path('app/firebase_credentials.json'));
+            ->withServiceAccount(storage_path('app/firebase/firebase_credentials.json'));
 
         // Create Firestore client
         $firestore = $factory->createFirestore();
