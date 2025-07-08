@@ -19,12 +19,12 @@ class FirebaseController extends Controller
         // dd($database);
         // Write a test document
         $docRef = $database->collection('Test')->document('ping');
-        dd($docRef);
         $docRef->set([
             'message' => 'Hello from Laravel!',
             'timestamp' => now()->toDateTimeString(),
         ]);
 
+        dd($docRef);
         // Read it back
         $snapshot = $docRef->snapshot();
 
