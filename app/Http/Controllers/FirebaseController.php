@@ -16,9 +16,10 @@ class FirebaseController extends Controller
         // Create Firestore client
         $firestore = $factory->createFirestore();
         $database = $firestore->database();
-        dd($database);
+        // dd($database);
         // Write a test document
         $docRef = $database->collection('Test')->document('ping');
+        dd($docRef);
         $docRef->set([
             'message' => 'Hello from Laravel!',
             'timestamp' => now()->toDateTimeString(),
