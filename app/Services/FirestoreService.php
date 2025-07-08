@@ -23,7 +23,7 @@ class FirestoreService
             if ($snapshot->exists()) {
                 \Log::info('Firestore document already exists', [
                     'document_id' => $id,
-                    'current_data' => $snapshot->data(), // 🔍 Log existing content
+                    'current_data' => json_decode(json_encode($snapshot->data()), true),
                     'path' => $firebase->name(),
                 ]);
 
