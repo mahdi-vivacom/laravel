@@ -16,7 +16,7 @@ class FirebaseController extends Controller
         // Create Firestore client
         $firestore = $factory->createFirestore();
         $database = $firestore->database();
-
+        dd($database);
         // Write a test document
         $docRef = $database->collection('Test')->document('ping');
         $docRef->set([
