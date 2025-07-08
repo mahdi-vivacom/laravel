@@ -8,10 +8,6 @@ class FirebaseController extends Controller
 {
     public function test(FirestoreService $firestore, $id, $name)
     {
-        $firestore = new FirestoreService();
-        $response = $firestore->addTestDocument($id, $name);
-
-        return $response;
+        return $firestore->addTestDocument($id, $name);
     }
 }
-
