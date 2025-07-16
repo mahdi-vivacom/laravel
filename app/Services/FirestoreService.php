@@ -11,7 +11,7 @@ class FirestoreService
     public function __construct()
     {
         $this->db = new FirestoreClient([
-            'keyFilePath' => base_path(env('FIREBASE_CREDENTIALS')),
+            'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
         ]);
     }
 
