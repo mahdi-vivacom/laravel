@@ -19,8 +19,9 @@ class FirestoreService
     {
         // dd($this->db->collection($collection));
         $document = $this->db->collection($collection)->document($docId);
-        dd($document);
+        // dd($document);
         $document->set($data);
+        dd($document);
         return $document->snapshot()->data();
     }
 
