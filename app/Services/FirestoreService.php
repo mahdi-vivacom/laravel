@@ -2,71 +2,43 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\JsonResponse;
+use Google\Cloud\Firestore\FirestoreClient;
 
 class FirestoreService
 {
-    /**
-     * Add or update a test document in Firestore.
-     *
-     * @param string $id
-     * @param string $name
-     * @return JsonResponse
-     */
-    public function addTestDocument(string $id, string $name): JsonResponse
+    protected FirestoreClient $db;
+
+    public function __construct()
     {
-        try {
-            $firebase = app('firebase.firestore')
-                ->database()
-                ->collection('Test')
-                ->document($id);
+        $this->db = new FirestoreClient([
+            'keyFilePath' => base_path(env('FIREBASE_CREDENTIALS')),
+        ]);
+    }
 
-            $data = [
-                'id' => $id,
-                'name' => $name,
-            ];
+    public function addDocument(string $collection, string $docId, array $data)
+    {
+        $document = $this->db->collection($collection)->document($docId);
+        $document->set($data);
+        return $document->snapshot()->data();
+    }
 
-            // Safely retrieve the snapshot
-            $snapshot = $firebase->snapshot();
+    public function getDocument(string $collection, string $docId)
+    {
+        $document = $this->db->collection($collection)->document($docId);
+        return $document->snapshot()->data();
+    }
 
-            if ($snapshot->exists()) {
-                // Log minimal safe data (avoid infinite recursion issues)
-                Log::info('Firestore document already exists', [
-                    'document_id' => $id,
-                    'path' => $firebase->name(),
-                    'fields' => is_array($snapshot->data()) ? array_keys($snapshot->data()) : [],
-                ]);
+    public function updateDocument(string $collection, string $docId, array $data)
+    {
+        $document = $this->db->collection($collection)->document($docId);
+        $document->update($data);
+        return $document->snapshot()->data();
+    }
 
-                // Update (merge) existing document
-                $firebase->set($data, ['merge' => true]);
-            } else {
-                // Log new creation
-                Log::info('Firestore document does not exist. Creating new.', [
-                    'document_id' => $id,
-                    'path' => $firebase->name(),
-                ]);
-
-                // Create new document
-                $firebase->set($data);
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Document handled successfully',
-                'path' => $firebase->name(),
-            ]);
-        } catch (\Throwable $e) {
-            // Log full exception trace
-            Log::error('Firestore error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Firestore exception: ' . $e->getMessage(),
-            ], 500);
-        }
+    public function deleteDocument(string $collection, string $docId)
+    {
+        $document = $this->db->collection($collection)->document($docId);
+        $document->delete();
+        return true;
     }
 }
