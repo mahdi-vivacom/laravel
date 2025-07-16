@@ -17,8 +17,9 @@ class FirestoreService
 
     public function addDocument(string $collection, string $docId, array $data)
     {
-        dd($this->db->collection($collection));
+        // dd($this->db->collection($collection));
         $document = $this->db->collection($collection)->document($docId);
+        dd($document);
         $document->set($data);
         return $document->snapshot()->data();
     }
