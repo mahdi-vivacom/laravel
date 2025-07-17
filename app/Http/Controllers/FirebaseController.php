@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FirestoreService;
 
 class FirebaseController extends Controller
 {
-    public function testFirestore(FirestoreService $firestore)
+    public function testFirestore()
     {
         return 'Great';
         // Add new doc
