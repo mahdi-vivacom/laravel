@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\FirestoreService;
 
 class FirebaseController extends Controller
 {
-    public function testFirestore()
+    public function testFirestore(FirestoreService $firestore)
     {
-        return 'Great';
         // Add new doc
         $firestore->addDocument('users', 'user_1234', [
             'name' => 'Meherul Bhai',
