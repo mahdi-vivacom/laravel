@@ -6,42 +6,24 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 class FirestoreService
 {
-    protected FirestoreClient $db;
+    protected $db;
 
     public function __construct()
     {
         $this->db = new FirestoreClient([
             'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
+            'projectId' => 'taxi-app-65709',
+            'transport' => 'rest',
         ]);
     }
 
-    public function addDocument(string $collection, string $docId, array $data)
+    public function addUser(array $data)
     {
-        // dd($this->db->collection($collection));
-        $document = $this->db->collection($collection)->document($docId);
-        // dd($document);
-        $document->set($data);
-        dd($document);
-        return $document->snapshot()->data();
+        return $this->db->collection('users')->add($data);
     }
 
-    public function getDocument(string $collection, string $docId)
+    public function getUsers()
     {
-        $document = $this->db->collection($collection)->document($docId);
-        return $document->snapshot()->data();
-    }
-
-    public function updateDocument(string $collection, string $docId, array $data)
-    {
-        $document = $this->db->collection($collection)->document($docId);
-        $document->update($data);
-        return $document->snapshot()->data();
-    }
-
-    public function deleteDocument(string $collection, string $docId)
-    {
-        $document = $this->db->collection($collection)->document($docId);
-        $document->delete();
-        return true;
+        return $this->db->collection('users')->documents();
     }
 }
