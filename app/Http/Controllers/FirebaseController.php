@@ -9,13 +9,13 @@ class FirebaseController extends Controller
     public function testFirestore(FirestoreService $firestore)
     {
         // Add new doc
-        $firestore->addDocument('users', 'user_1234', [
+        $firestore->addUser([
             'name' => 'Meherul Bhai',
             'email' => 'meherul@example.com',
         ]);
 
         // Read doc
-        $data = $firestore->getDocument('users', 'user_123');
+        $data = $firestore->getUsers();
 
         dd($data);
     }
