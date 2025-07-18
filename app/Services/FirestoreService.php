@@ -12,6 +12,7 @@ class FirestoreService
     {
         $this->db = new FirestoreClient([
             'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
+            'projectId' => 'taxi-app-65709',
             'transport' => 'rest',
         ]);
     }
