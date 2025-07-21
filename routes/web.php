@@ -9,6 +9,8 @@ Route::get('/firestore-grpc', function () {
             'projectId' => 'fir-project-d34b6',
             'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
         ]);
+        echo "<pre>";
+        print_r($firestore);
 
         $docRef = $firestore->collection('test')->add([
             'check' => 'gRPC connection successful',
