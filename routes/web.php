@@ -12,7 +12,7 @@ Route::get('/grpc', [FirebaseController::class, 'testGrpc']);
 Route::get('/firestore-grpc', function () {
     try {
         $firestore = new FirestoreClient([
-            'projectId' => 'taxi-app-65709',
+            'projectId' => 'fir-project-d34b6',
             'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
         ]);
 
