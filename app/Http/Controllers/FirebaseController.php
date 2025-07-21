@@ -2,22 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FirestoreService;
+use Google\Cloud\Firestore\FirestoreClient;
+use Illuminate\Support\Facades\Log;
 
 class FirebaseController extends Controller
 {
-    public function testFirestore(FirestoreService $firestore)
+    public function testFirestore()
     {
-        // Add new doc
-        $firestore->addUser([
-            'name' => 'Meherul Bhai',
-            'email' => 'meherul@example.com',
-        ]);
+        try {
+            $firestore = new FirestoreClient([
+                'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
+                'projectId' => 'taxi-app-65709',
+                'transport' => 'rest',
+            ]);
 
-        // Read doc
-        $data = $firestore->getUsers();
+            $collection = $firestore->collection('test');
+            $docRef = $collection->add([
+                'message' => 'Firestore test from Controller',
+                'timestamp' => now()->toDateTimeString()
+            ]);
 
-        dd($data);
+            return response()->json([
+                'status' => '✅ Success',
+                'documentId' => $docRef->id(),
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Firestore Error: ' . $e->getMessage());
+            return response()->json([
+                'status' => '❌ Failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-
 }
