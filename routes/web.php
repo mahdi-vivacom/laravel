@@ -13,10 +13,10 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 Route::get('/test-firestore-rest', function () {
     try {
-        $firestore = new FirestoreClient([
-            'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
-                'projectId' => 'taxi-app-65709',
-                'transport' => 'rest',
+                $firestore = new \Google\Cloud\Firestore\FirestoreClient([
+            'projectId' => 'taxi-app-65709',
+            'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
+            'transport' => 'rest', // ✅ This must be respected
         ]);
         echo '<pre>';
         print_r($firestore);exit;
