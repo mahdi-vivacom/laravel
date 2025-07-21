@@ -2,12 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Google\Cloud\Firestore\FirestoreClient;
-use Google\Cloud\Firestore\FieldValue;
-
-use App\Http\Controllers\FirebaseController;
-
-Route::get('/grpc', [FirebaseController::class, 'testGrpc']);
-
 
 Route::get('/firestore-grpc', function () {
     try {
@@ -17,13 +11,13 @@ Route::get('/firestore-grpc', function () {
         ]);
 
         $docRef = $firestore->collection('test')->add([
-            'check' => 'gRPC connection successful'
-            //'time' => FieldValue::timestamp(new \DateTime()) // ✅ Firestore-safe timestamp
+            'check' => 'gRPC connection successful',
+            'time' => (new \DateTime())->format('Y-m-d H:i:s') // avoid Google\Protobuf\Timestamp
         ]);
 
         return response()->json([
             'status' => '✅ gRPC document created',
-            'document_id' => $docRef->id()
+            'document_id' => $docRef->id() // This returns only the ID string
         ]);
 
     } catch (\Throwable $e) {
@@ -33,5 +27,3 @@ Route::get('/firestore-grpc', function () {
         ], 500);
     }
 });
-;
-
