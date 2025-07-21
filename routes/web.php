@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Google\Cloud\Firestore\FirestoreClient;
+use Google\Cloud\Firestore\FieldValue;
 
 Route::get('/firestore-grpc', function () {
     try {
@@ -10,12 +11,11 @@ Route::get('/firestore-grpc', function () {
             'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
         ]);
 
-        // Add document
         $docRef = $firestore->collection('test')->add([
             'check' => 'gRPC connection successful'
+            //'time' => FieldValue::timestamp(new \DateTime()) // ✅ Firestore-safe timestamp
         ]);
 
-        // Just return doc ID — not the whole object
         return response()->json([
             'status' => '✅ gRPC document created',
             'document_id' => $docRef->id()
@@ -28,5 +28,5 @@ Route::get('/firestore-grpc', function () {
         ], 500);
     }
 });
-
+;
 
