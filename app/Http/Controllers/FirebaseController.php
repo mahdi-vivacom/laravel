@@ -11,7 +11,7 @@ class FirebaseController extends Controller
     {
         try {
             $firestore = new FirestoreClient([
-                'projectId' => 'taxi-app-65709',
+                'projectId' => 'firestore-grpc',
                 'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
             ]);
 
