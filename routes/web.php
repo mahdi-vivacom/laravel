@@ -8,14 +8,15 @@ Route::get('/firestore-grpc', function () {
         $firestore = new FirestoreClient([
             'projectId' => 'taxi-app-65709',
             'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
-            // no need to set transport, defaults to gRPC
         ]);
 
+        // Add document
         $docRef = $firestore->collection('test')->add([
             'check' => 'gRPC connection successful',
-            'time' => new \DateTime() // ✅ This works with gRPC!
+            'time' => new \DateTime() // Firestore can store this
         ]);
 
+        // Just return doc ID — not the whole object
         return response()->json([
             'status' => '✅ gRPC document created',
             'document_id' => $docRef->id()
@@ -28,4 +29,5 @@ Route::get('/firestore-grpc', function () {
         ], 500);
     }
 });
+
 
