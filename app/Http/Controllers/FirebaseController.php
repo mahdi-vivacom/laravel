@@ -2,36 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Google\Cloud\Firestore\FirestoreClient;
-use Illuminate\Support\Facades\Log;
 
 class FirebaseController extends Controller
 {
-    public function testFirestore()
+    public function testGrpc()
     {
         try {
             $firestore = new FirestoreClient([
-                'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
                 'projectId' => 'taxi-app-65709',
-                'transport' => 'rest',
+                'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
             ]);
 
-            $collection = $firestore->collection('test');
-            $docRef = $collection->add([
-                'message' => 'Firestore test from Controller',
-                'timestamp' => now()->toDateTimeString()
+            $docRef = $firestore->collection('test')->add([
+                'check' => 'gRPC connection successful',
+                'timestamp' => now()->toDateTimeString(),
             ]);
 
             return response()->json([
-                'status' => '✅ Success',
-                'documentId' => $docRef->id(),
+                'status' => '✅ gRPC document created',
+                'document_id' => $docRef->id()
             ]);
 
-        } catch (\Exception $e) {
-            Log::error('Firestore Error: ' . $e->getMessage());
+        } catch (\Throwable $e) {
             return response()->json([
-                'status' => '❌ Failed',
-                'error' => $e->getMessage()
+                'status' => '❌ Error',
+                'message' => $e->getMessage()
             ], 500);
         }
     }

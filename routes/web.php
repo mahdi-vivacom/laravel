@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Firestore\FieldValue;
 
+use App\Http\Controllers\FirebaseController;
+
+Route::get('/firestore-grpc', [FirebaseController::class, 'testGrpc']);
+
+
 Route::get('/firestore-grpc', function () {
     try {
         $firestore = new FirestoreClient([
