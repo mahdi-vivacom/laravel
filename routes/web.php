@@ -12,8 +12,7 @@ Route::get('/firestore-grpc', function () {
 
         // Add document
         $docRef = $firestore->collection('test')->add([
-            'check' => 'gRPC connection successful',
-            'time' => new \DateTime() // Firestore can store this
+            'check' => 'gRPC connection successful'
         ]);
 
         // Just return doc ID — not the whole object
