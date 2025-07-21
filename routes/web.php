@@ -19,9 +19,9 @@ Route::get('/test-firestore-rest', function () {
                 'transport' => 'rest',
         ]);
 
-        $firestore->collection('test')->add([
+         $firestore->collection('test')->add([
             'check' => 'REST connection successful',
-            'time' => now()->toDateTimeString()
+            'time' => date('Y-m-d H:i:s') // ✅ Safe native string
         ]);
 
         return '✅ Firestore REST is working';
