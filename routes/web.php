@@ -2,23 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use Google\Cloud\Firestore\FirestoreClient;
-use Google\Protobuf\Timestamp;
+use Google\Cloud\Firestore\FieldValue;
 
 Route::get('/firestore-grpc', function () {
     try {
         $firestore = new FirestoreClient([
             'projectId' => 'taxi-app-65709',
             'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
-            // NO transport => REST here; gRPC is default
         ]);
-
-        // Create a protobuf timestamp
-        $timestamp = new Timestamp();
-        $timestamp->setSeconds(time());
 
         $docRef = $firestore->collection('test')->add([
             'check' => 'gRPC connection successful',
-            'time' => $timestamp // ✅ Safe for gRPC
+            'time' => FieldValue::timestamp(new \DateTime()) // ✅ Firestore-safe timestamp
         ]);
 
         return response()->json([
@@ -33,4 +28,5 @@ Route::get('/firestore-grpc', function () {
         ], 500);
     }
 });
+;
 
