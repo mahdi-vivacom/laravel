@@ -14,9 +14,9 @@ use Google\Cloud\Firestore\FirestoreClient;
 Route::get('/test-firestore-rest', function () {
     try {
         $firestore = new FirestoreClient([
-            'projectId' => 'your-project-id',
-            'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
-            'transport' => 'rest', // ✅ THIS IS CRUCIAL
+            'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
+                'projectId' => 'taxi-app-65709',
+                'transport' => 'rest',
         ]);
 
         $firestore->collection('test')->add([
