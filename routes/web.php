@@ -5,21 +5,19 @@ use Google\Cloud\Firestore\FirestoreClient;
 
 Route::get('/firestore-grpc', function () {
     try {
-        $firestore = new FirestoreClient([
+        $firestore = new \Google\Cloud\Firestore\FirestoreClient([
             'projectId' => 'fir-project-d34b6',
-            'keyFilePath' => base_path('storage/app/firebase/firebase_credentials.json'),
+            'keyFilePath' => storage_path('app/firebase/firebase_credentials.json'),
         ]);
-        echo "<pre>";
-        print_r($firestore);
 
         $docRef = $firestore->collection('test')->add([
             'check' => 'gRPC connection successful',
-            'time' => (new \DateTime())->format('Y-m-d H:i:s') // avoid Google\Protobuf\Timestamp
+            'time' => (new \DateTime())->format('Y-m-d H:i:s') // Use plain string for time
         ]);
 
         return response()->json([
             'status' => '✅ gRPC document created',
-            'document_id' => $docRef->id() // This returns only the ID string
+            'document_id' => $docRef->id() // ✅ only the string ID
         ]);
 
     } catch (\Throwable $e) {
