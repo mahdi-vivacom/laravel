@@ -18,7 +18,8 @@ Route::get('/test-firestore-rest', function () {
                 'projectId' => 'taxi-app-65709',
                 'transport' => 'rest',
         ]);
-
+        echo '<pre>';
+        print_r($firestore);exit;
          $firestore->collection('test')->add([
             'check' => 'REST connection successful',
             'time' => date('Y-m-d H:i:s') // ✅ Safe native string
